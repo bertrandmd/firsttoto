@@ -14,7 +14,6 @@ pygame.mouse.set_visible(0)
 
 SortieAnticipe = False
 a = ""	
-		
 
 class Clavier(Thread):
 	"""Thread qui permet d'interagir dans le main() au clavier"""
@@ -184,10 +183,10 @@ def main():
 	#thread_1.join()
 	#thread_2.join()
 	thread_3.join()
-	thread_4.join()	
+	thread_4.join()
 
 
-	finProg = time.time() 
+	finProg = time.time()
 	print 'prog terminé en : ' + str(finProg-debutProg) + ' sec'
 	seconds = finProg-debutProg
 	m, s = divmod(seconds, 60)
@@ -196,5 +195,3 @@ def main():
 
 if __name__=='__main__':
     main()
-
-
