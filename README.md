@@ -8,7 +8,7 @@ test
 :boar:
 
 * multi-thread
-* utilisation de la *picam*
+* utilisation de la **picam**
 
 _librairies utilisée_ :
 
@@ -17,4 +17,4 @@ import GPIO
 import picam
 ```
 
-contact : [@bertrandmd](bertrand.md@gmail.com)
+contact : [bertrandmd](bertrand.md@gmail.com)
