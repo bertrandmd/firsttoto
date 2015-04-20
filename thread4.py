@@ -112,7 +112,7 @@ def pharesEteints():
 	
 
 def lumieres():
-	for i in range(0,10) :
+	for i in range(0,1) :
 		GPIO.output(4,GPIO.HIGH)
 		GPIO.output(17,GPIO.HIGH)
 		GPIO.output(18,GPIO.HIGH)
@@ -144,6 +144,83 @@ def k2000():
 	#	GPIO.output(i,GPIO.HIGH)	
 	#	time.sleep(0.1)
 	#	GPIO.output(i,GPIO.LOW)	
+
+serie = [17,18,27,7,4]
+
+def toto(x):
+	for i in range (0,x):
+		for i in serie:
+			GPIO.output(i,GPIO.HIGH)	
+			time.sleep(0.1)
+			GPIO.output(i,GPIO.LOW)
+		serie.reverse()
+		#random.shuffle(serie)	
+		i=i+1
+def toto2(x):
+	for i in range (0,x):
+		for i in serie:
+			GPIO.output(i,GPIO.HIGH)	
+			time.sleep(0.1)
+			GPIO.output(i,GPIO.LOW)
+		#serie.reverse()
+		random.shuffle(serie)	
+		i=i+1
+
+
+def tata(x):
+	if (len(serie) % 2) == 0: 
+		for i in range (0,x):
+			for i in range (0,len(serie)/2):
+				#print str(serie[0]) + " " + str(serie[-1])
+				#print "%s %s" % (serie[0+i], serie[-1-i])
+				GPIO.output(serie[0+i],GPIO.HIGH)
+				GPIO.output(serie[-1-i],GPIO.HIGH)	
+				time.sleep(0.1)
+				GPIO.output(serie[0+i],GPIO.LOW)
+				GPIO.output(serie[-1-i],GPIO.LOW)			
+				time.sleep(0.1)
+				i=i+1
+			i=len(serie)/2
+			for i in range (len(serie)/2,0,-1):
+				#print "%s %s" % (serie[-1+i], serie[0-i])			
+				time.sleep(0.1)
+				GPIO.output(serie[-1+i],GPIO.HIGH)
+				GPIO.output(serie[0-i],GPIO.HIGH)	
+				time.sleep(0.1)
+				GPIO.output(serie[-1+i],GPIO.LOW)
+				GPIO.output(serie[0-i],GPIO.LOW)
+				i=i-1
+	else:
+		for i in range (0,x):
+			for i in range (0,len(serie)/2):
+				#print "%s %s" % (serie[0+i], serie[-1-i])			
+				time.sleep(0.1)
+				GPIO.output(serie[0+i],GPIO.HIGH)
+				GPIO.output(serie[-1-i],GPIO.HIGH)	
+				time.sleep(0.1)
+				GPIO.output(serie[0+i],GPIO.LOW)
+				GPIO.output(serie[-1-i],GPIO.LOW)
+				i=i+1
+			time.sleep(0.1)
+			#print serie[int(round(len(serie)/2,0))]
+			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.HIGH)
+			time.sleep(0.1)
+			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.LOW)
+			time.sleep(0.1)
+			#print serie[int(round(len(serie)/2,0))]
+			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.HIGH)
+			time.sleep(0.1)
+			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.LOW)
+			for i in range (len(serie)/2,0,-1):
+				#print "%s %s" % (serie[-1+i], serie[0-i])			
+				time.sleep(0.1)
+				GPIO.output(serie[-1+i],GPIO.HIGH)
+				GPIO.output(serie[0-i],GPIO.HIGH)	
+				time.sleep(0.1)
+				GPIO.output(serie[-1+i],GPIO.LOW)
+				GPIO.output(serie[0-i],GPIO.LOW)
+				i=i+1
+
 
 
 def finProgs():
@@ -325,7 +402,7 @@ class Phares(Thread):
 		global SortieAnticipe
 		print "LES PHARES SONT ALLUMES !"
 		while  SortieAnticipe == False and self.Terminated == False:
-			pass
+			tata(1)
 		print "Les PHARES SONT ETEINTS !"
 	def stop(self):
 		"""methode pour arreter proprement le thread"""
@@ -361,7 +438,7 @@ class Slider(Thread):
 		global SortieAnticipe
 		print "Gyrophares allumés !"
 		while  SortieAnticipe == False and self.Terminated == False:
-			k2000()
+			toto(1)
 	def stop(self):
 		"""methode pour arreter proprement le thread"""
 		self.Terminated = True
