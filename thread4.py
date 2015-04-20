@@ -163,7 +163,7 @@ def toto2(x):
 			time.sleep(0.1)
 			GPIO.output(i,GPIO.LOW)
 		#serie.reverse()
-		random.shuffle(serie)	
+		#random.shuffle(serie)	
 		i=i+1
 
 
@@ -175,18 +175,18 @@ def tata(x):
 				#print "%s %s" % (serie[0+i], serie[-1-i])
 				GPIO.output(serie[0+i],GPIO.HIGH)
 				GPIO.output(serie[-1-i],GPIO.HIGH)	
-				time.sleep(0.1)
+				time.sleep(0.2)
 				GPIO.output(serie[0+i],GPIO.LOW)
 				GPIO.output(serie[-1-i],GPIO.LOW)			
-				time.sleep(0.1)
+				time.sleep(0.2)
 				i=i+1
 			i=len(serie)/2
 			for i in range (len(serie)/2,0,-1):
 				#print "%s %s" % (serie[-1+i], serie[0-i])			
-				time.sleep(0.1)
+				time.sleep(0.2)
 				GPIO.output(serie[-1+i],GPIO.HIGH)
 				GPIO.output(serie[0-i],GPIO.HIGH)	
-				time.sleep(0.1)
+				time.sleep(0.2)
 				GPIO.output(serie[-1+i],GPIO.LOW)
 				GPIO.output(serie[0-i],GPIO.LOW)
 				i=i-1
@@ -194,29 +194,29 @@ def tata(x):
 		for i in range (0,x):
 			for i in range (0,len(serie)/2):
 				#print "%s %s" % (serie[0+i], serie[-1-i])			
-				time.sleep(0.1)
+				time.sleep(0.2)
 				GPIO.output(serie[0+i],GPIO.HIGH)
 				GPIO.output(serie[-1-i],GPIO.HIGH)	
-				time.sleep(0.1)
+				time.sleep(0.2)
 				GPIO.output(serie[0+i],GPIO.LOW)
 				GPIO.output(serie[-1-i],GPIO.LOW)
 				i=i+1
-			time.sleep(0.1)
+			time.sleep(0.2)
 			#print serie[int(round(len(serie)/2,0))]
 			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.HIGH)
-			time.sleep(0.1)
+			time.sleep(0.2)
 			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.LOW)
-			time.sleep(0.1)
+			#time.sleep(0.2)
 			#print serie[int(round(len(serie)/2,0))]
-			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.HIGH)
-			time.sleep(0.1)
-			GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.LOW)
+			#GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.HIGH)
+			#time.sleep(0.2)
+			#GPIO.output(serie[int(round(len(serie)/2,0))],GPIO.LOW)
 			for i in range (len(serie)/2,0,-1):
 				#print "%s %s" % (serie[-1+i], serie[0-i])			
-				time.sleep(0.1)
+				time.sleep(0.2)
 				GPIO.output(serie[-1+i],GPIO.HIGH)
 				GPIO.output(serie[0-i],GPIO.HIGH)	
-				time.sleep(0.1)
+				time.sleep(0.2)
 				GPIO.output(serie[-1+i],GPIO.LOW)
 				GPIO.output(serie[0-i],GPIO.LOW)
 				i=i+1
@@ -249,6 +249,7 @@ class Clavier(Thread):
 		compteur_phares = 1
 		compteur_lumieres = 1
 		compteur_slider = 1
+		compteur_slider2 = 1
 		while not done:
 			#global thread_5
 			global SortieAnticipe
@@ -310,6 +311,7 @@ class Clavier(Thread):
 							c = "thread_" + str(10 + compteur_phares)
 							c = Phares()
 							c.start()
+							c.join()
 						else :
 							c.stop()
 
@@ -320,6 +322,7 @@ class Clavier(Thread):
 							d = "thread_" + str(10 + compteur_lumieres)
 							d = Lumiere()
 							d.start()
+							d.join()
 						else :
 							d.stop()
 
@@ -330,8 +333,20 @@ class Clavier(Thread):
 							e = "thread_" + str(10 + compteur_slider)
 							e = Slider()
 							e.start()
+							e.join()
 						else :
 							e.stop()
+
+					if (event.type == KEYDOWN and event.key == K_s):
+						compteur_slider2 = compteur_slider2 + 1
+						if (compteur_slider2 % 2) == 0: 
+							global f
+							f = "thread_" + str(10 + compteur_slider2)
+							f = Slider2()
+							f.start()
+							f.join()
+						else :
+							f.stop()
 
 
 class Timer(Thread):
@@ -443,7 +458,19 @@ class Slider(Thread):
 		"""methode pour arreter proprement le thread"""
 		self.Terminated = True
 
-
+class Slider2(Thread):
+	"""Thread qui permet """	
+	def __init__(self):
+		Thread.__init__(self)
+		self.Terminated = False
+	def run(self):
+		"""code à executer pdt le thread"""
+		global SortieAnticipe
+		while  SortieAnticipe == False and self.Terminated == False:
+			toto2(1)
+	def stop(self):
+		"""methode pour arreter proprement le thread"""
+		self.Terminated = True
 
 def main():
 	debutProg = time.time()
@@ -458,6 +485,7 @@ def main():
 	#thread_5 = Hymne()
 	#thread_6 = Lumiere()
 	#thread_7 = Slider()
+	#thread_8 = Slider2()
 
 	# Lancement des threads
 	#thread_1.start()
