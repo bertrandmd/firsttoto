@@ -15,6 +15,9 @@ pygame.mouse.set_visible(0)
 SortieAnticipe = False
 a = ""	
 
+def avancer():
+	print "GAZZZZZZZZZZZZZZZ"
+	
 class Clavier(Thread):
 	"""Thread qui permet d'interagir dans le main() au clavier"""
 		
@@ -48,6 +51,7 @@ class Clavier(Thread):
 						print("SORTIE")	
 					if (event.type == KEYDOWN and event.key == K_UP):
 						print("pi avance !")
+						avancer()
 					if (event.type == KEYDOWN and event.key == K_RIGHT):
 						print("tourne a droite")	
 					if (event.type == KEYDOWN and event.key == K_LEFT):
