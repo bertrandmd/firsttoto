@@ -21,19 +21,21 @@ sender.bind(('0.0.0.0', 0))                                                     
  
 # Setup pygame and key states
 global hadEvent
-global moveUp
-global moveDown
-global moveLeft
-global moveRighte
+global avance
+global arriere
+global gauche
+global droite
 global moveQuit
 global gyroOn
+global phare
 hadEvent = True
-moveUp = False
-moveDown = False
-moveLeft = False
-moveRight = False
+avance = False
+arriere = False
+gauche = False
+droite = False
 moveQuit = False
 gyroOn = False
+phare = False
 pygame.init()
 screen = pygame.display.set_mode([300,300])
 pygame.display.set_caption("RemoteKeyBorg - Press [ESC] to quit")
@@ -42,12 +44,13 @@ pygame.display.set_caption("RemoteKeyBorg - Press [ESC] to quit")
 def PygameHandler(events):
     # Variables accessible outside this function
     global hadEvent
-    global moveUp
-    global moveDown
-    global moveLeft
-    global moveRight
+    global avance
+    global arriere
+    global droite
+    global gauche
     global moveQuit
     global gyroOn
+    global phare
     # Handle each event individually
     for event in events:
         if event.type == pygame.QUIT:
@@ -56,39 +59,74 @@ def PygameHandler(events):
             moveQuit = True
         elif event.type == pygame.KEYDOWN:
             # A key has been pressed, see if it is one we want
-            hadEvent = True
+            #hadEvent = True
             if event.key == pygame.K_UP:
-                moveUp = True
+                sender.sendto('AVAN', (broadcastIP, broadcastPort))
+                avance = True
                 print "Up"
             elif event.key == pygame.K_DOWN:
-                moveDown = True
+                sender.sendto('ARRI', (broadcastIP, broadcastPort))
+                arriere = True
                 print "Down"
             elif event.key == pygame.K_LEFT:
-                moveLeft = True
+                sender.sendto('GAUC', (broadcastIP, broadcastPort))
+                gauche = True
                 print "Left"
             elif event.key == pygame.K_RIGHT:
-                moveRight = True
+                sender.sendto('DROI', (broadcastIP, broadcastPort))
+                droite = True
                 print "Right"
             elif event.key == pygame.K_ESCAPE:
+                sender.sendto('EXIT', (broadcastIP, broadcastPort))
                 moveQuit = True
+                hadEvent = True
                 print "Quit"
             elif event.key == pygame.K_g:
+                sender.sendto('GYRO', (broadcastIP, broadcastPort))
                 gyroOn = True
-                print "GYRO"			
-        #elif event.type == pygame.KEYUP:
-        #    # A key has been released, see if it is one we want
-        #    hadEvent = True
-         #   if event.key == pygame.K_UP:
-         #       moveUp = False
-         #   elif event.key == pygame.K_DOWN:
-         #       moveDown = False
-         #   elif event.key == pygame.K_LEFT:
-         #       moveLeft = False
-         ##   elif event.key == pygame.K_RIGHT:
-          #      moveRight = False
-          #  elif event.key == pygame.K_ESCAPE:
-          #      moveQuit = False
- 
+                print "GYRO"
+            elif event.key == pygame.K_p:
+                sender.sendto('PHAR', (broadcastIP, broadcastPort))
+                phare = True
+                print "PHARES"
+            elif event.key == pygame.K_h:
+                sender.sendto('HYMNE', (broadcastIP, broadcastPort))
+                #phare = True
+                print "Hymnes"
+            elif event.key == pygame.K_k:
+                sender.sendto('K2000', (broadcastIP, broadcastPort))
+                #phare = True
+                print "k2000"
+            elif event.key == pygame.K_j:
+                sender.sendto('SLIDER2', (broadcastIP, broadcastPort))
+                #phare = True
+                print "SLIDER2"
+            elif event.key == pygame.K_l:
+                sender.sendto('LUMIERE', (broadcastIP, broadcastPort))
+                #phare = True
+                print "Lumieres"			
+        elif event.type == pygame.KEYUP:
+            # A key has been released, see if it is one we want
+            #hadEvent = True
+            if event.key == pygame.K_UP:
+                avance = False
+                sender.sendto('STOP', (broadcastIP, broadcastPort))
+            elif event.key == pygame.K_DOWN:
+                arriere = False
+                sender.sendto('STOP_ARRI', (broadcastIP, broadcastPort))
+            elif event.key == pygame.K_LEFT:
+                gauche = False
+                sender.sendto('STOP_GAUC', (broadcastIP, broadcastPort))
+            elif event.key == pygame.K_RIGHT:
+                droite = False
+                sender.sendto('STOP_DROI', (broadcastIP, broadcastPort))
+            elif event.key == pygame.K_ESCAPE:
+                moveQuit = False
+            elif event.key == pygame.K_g:
+                gyroOn = False
+            elif event.key == pygame.K_p:
+                phare = False
+				
 try:
     print 'Press [ESC] to quit'
     # Loop indefinitely
@@ -98,27 +136,23 @@ try:
         if hadEvent or regularUpdate:
             # Keys have changed, generate the command list based on keys
             hadEvent = False
-            driveCommands = ['X', 'X', 'X', 'X']                    # Default to do not change
+            driveCommands = ['X']
             if moveQuit:
-                sender.sendto('gyro', (broadcastIP, broadcastPort))
-                time.sleep(20)
                 break
-            elif moveLeft:
-                driveCommands[leftDrive - 1] = 'OFF'
-                driveCommands[rightDrive - 1] = 'ON'
-            elif moveRight:
-                driveCommands[leftDrive - 1] = 'ON'
-                driveCommands[rightDrive - 1] = 'OFF'
-            elif moveUp:
-                driveCommands[leftDrive - 1] = 'ON'
-                driveCommands[rightDrive - 1] = 'ON'
             elif gyroOn:
-                driveCommands[leftDrive - 1] = 'BITE'
-                driveCommands[rightDrive - 1] = 'TROU'
+                driveCommands[leftDrive - 1] = 'GYRO'
+            elif phare:
+                driveCommands[leftDrive - 1] = 'PHARE'
+            elif avance:
+                driveCommands[leftDrive - 1] = 'AVAN'
+            elif droite:
+                driveCommands[leftDrive - 1] = 'DROI'
+            elif gauche:
+                driveCommands[leftDrive - 1] = 'GAUC'
+            elif arriere:
+                driveCommands[leftDrive - 1] = 'ARRI'
             else:
-                # None of our expected keys, stop
-                driveCommands[leftDrive - 1] = 'OFF'
-                driveCommands[rightDrive - 1] = 'OFF'
+                print 'commande non reconnue'
             # Send the drive commands
             command = ''
             for driveCommand in driveCommands:
