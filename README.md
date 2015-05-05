@@ -4,7 +4,7 @@ test
 ---
 
 ##Projets en python pour mon raspberry pi
-emoji! :octocat:
+:octocat:
 :boar:
 
 * multi-thread
